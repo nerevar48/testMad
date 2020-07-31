@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Livanov</string>
+    <string name="title">Title</string>
+    <string name="repo_name_label">Repo. name:</string>
+    <string name="repo_lang_label">Lang:</string>
+    <string name="repo_description_label">Repo. description:</string>
+    <string name="repo_forks_label">Forks:</string>
+    <string name="repo_stars_label">Stars:</string>
+    <string name="repo_commits_label">Commits:</string>
 </resources>
