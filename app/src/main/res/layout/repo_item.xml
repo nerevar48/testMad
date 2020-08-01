@@ -12,6 +12,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/repoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="32dp"
             android:text="@{repoModel.repo.description}"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -163,6 +164,18 @@
             android:textStyle="italic"
             app:layout_constraintStart_toEndOf="@+id/repoStarCount"
             app:layout_constraintTop_toBottomOf="@+id/repoDescr" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text=">"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

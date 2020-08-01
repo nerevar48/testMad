@@ -14,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
 class RepoViewModel : ViewModel() {
 
     init {
-        DaggerAppComponent.create().injectReposViewModel(this)
+        DaggerAppComponent.create().injectRepoViewModel(this)
     }
 
     private val parentJob = Job()
@@ -64,18 +64,6 @@ class RepoViewModel : ViewModel() {
         }
     }
 
-    fun fetchRepoCommits() {
-        if (this::repo.isInitialized) {
-            scope.launch {
-                val repoCommits = repository.getRepoCommits(repo.ownerName, repo.name, 1, 10)
-                if (repoCommits != null) {
-                    repo.commits = repoCommits
-                    repoLiveData.postValue(repo)
-                }
-            }
-        }
-    }
-
     fun fetchRepoCommitsCount() {
         if (this::repo.isInitialized) {
             scope.launch {
@@ -85,7 +73,6 @@ class RepoViewModel : ViewModel() {
             }
         }
     }
-
 
     fun cancelAllRequests() = coroutineContext.cancel()
 

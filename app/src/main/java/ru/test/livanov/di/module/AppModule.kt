@@ -6,7 +6,9 @@ import ru.test.livanov.api.ApiFactory
 import ru.test.livanov.api.GitHubApi
 import ru.test.livanov.api.GitHubRepository
 import ru.test.livanov.model.Repo
+import ru.test.livanov.ui.RepoCommitListAdapter
 import ru.test.livanov.ui.RepoListAdapter
+import ru.test.livanov.viewmodel.RepoCommitViewModel
 import ru.test.livanov.viewmodel.RepoViewModel
 import javax.inject.Singleton
 
@@ -36,8 +38,18 @@ class AppModule {
     }
 
     @Provides
+    fun provideRepoCommitViewModel(): RepoCommitViewModel {
+        return RepoCommitViewModel()
+    }
+
+    @Provides
     fun provideRepoListAdapter(): RepoListAdapter {
         return RepoListAdapter()
+    }
+
+    @Provides
+    fun provideRepoCommitListAdapter(): RepoCommitListAdapter {
+        return RepoCommitListAdapter()
     }
 
 }

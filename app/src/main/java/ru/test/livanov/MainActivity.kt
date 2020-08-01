@@ -1,9 +1,12 @@
 package ru.test.livanov
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.test.livanov.viewmodel.RepoViewModel
@@ -12,6 +15,11 @@ import ru.test.livanov.ui.RepoListAdapter
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        const val KEY_REPO_OWNER_TO_DETAIL = "repo_owner_to_detail"
+        const val KEY_REPO_NAME_TO_DETAIL = "repo_name_to_detail"
+    }
 
     @Inject
     lateinit var repoListAdapter: RepoListAdapter
@@ -27,9 +35,9 @@ class MainActivity : AppCompatActivity() {
         repoViewModel.fetchRepos().observe(this, Observer {repoViewModelList ->
             repoListAdapter.reposViewModelList = repoViewModelList
             setList()
-            repoViewModelList?.forEach {
+            repoViewModelList?.forEachIndexed {index, it ->
                 it.getLiveData().observe(this, Observer {
-                    repoListAdapter.notifyDataSetChanged()
+                    repoListAdapter.notifyItemChanged(index)
                 })
                 it.fetchRepoDetail()
                 it.fetchRepoCommitsCount()
@@ -40,7 +48,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setList() {
         reposRecycler.adapter = repoListAdapter
+        repoListAdapter.callback = object : RepoListAdapter.Callback {
+            override fun onItemClicked(context: Context, repo: Repo) {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra(KEY_REPO_OWNER_TO_DETAIL, repo.ownerName)
+                intent.putExtra(KEY_REPO_NAME_TO_DETAIL, repo.name)
+                context.startActivity(intent)
+            }
+        }
         reposRecycler.layoutManager = LinearLayoutManager(this)
+        reposRecycler.addItemDecoration(DividerItemDecoration(reposRecycler.context, DividerItemDecoration.VERTICAL))
     }
 
 }

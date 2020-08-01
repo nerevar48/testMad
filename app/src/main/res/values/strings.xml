@@ -7,4 +7,6 @@
     <string name="repo_forks_label">Forks:</string>
     <string name="repo_stars_label">Stars:</string>
     <string name="repo_commits_label">Commits:</string>
+    <string name="repo_detail_owner_label">owner:</string>
+    <string name="owner_avatar">owner avatar</string>
 </resources>
