@@ -3,10 +3,7 @@ package ru.test.livanov.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ru.test.livanov.api.GitHubRepository
 import ru.test.livanov.di.DaggerAppComponent
 import ru.test.livanov.model.RepoDetail
@@ -47,5 +44,7 @@ class RepoDetailViewModel : ViewModel() {
         }
         return repoLiveData
     }
+
+    fun cancelAllRequests() = scope.coroutineContext.cancelChildren()
 
 }

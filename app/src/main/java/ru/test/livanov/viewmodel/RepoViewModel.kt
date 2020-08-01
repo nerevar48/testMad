@@ -17,12 +17,10 @@ class RepoViewModel : ViewModel() {
         DaggerAppComponent.create().injectRepoViewModel(this)
     }
 
-    private val parentJob = Job()
-
+    private var parentJob = Job()
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Default
-
-    private val scope = CoroutineScope(coroutineContext)
+    private var scope = CoroutineScope(coroutineContext)
 
     @Inject
     lateinit var repository: GitHubRepository
@@ -40,6 +38,7 @@ class RepoViewModel : ViewModel() {
     fun fetchRepos(): LiveData<List<RepoViewModel>> {
         scope.launch {
             val repos = repository.getRepos()
+            reposViewList.clear()
             repos?.forEach {
                 val reposViewModel = App.component.getRepoViewModel()
                 reposViewModel.repo = it
@@ -74,6 +73,6 @@ class RepoViewModel : ViewModel() {
         }
     }
 
-    fun cancelAllRequests() = coroutineContext.cancel()
+    fun cancelAllRequests() = scope.coroutineContext.cancelChildren()
 
 }

@@ -54,6 +54,6 @@ class RepoCommitViewModel : ViewModel() {
         return reposLiveData
     }
 
-    fun cancelAllRequests() = coroutineContext.cancel()
+    fun cancelAllRequests() = scope.coroutineContext.cancelChildren()
 
 }
