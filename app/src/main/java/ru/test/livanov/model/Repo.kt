@@ -1,6 +1,7 @@
 package ru.test.livanov.model
 
 open class Repo {
+    var id: String = "0"
     lateinit var name: String
     var description: String? = ""
     var ownerName: String = ""

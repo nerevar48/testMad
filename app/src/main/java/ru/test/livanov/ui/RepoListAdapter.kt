@@ -14,7 +14,7 @@ class RepoListAdapter: RecyclerView.Adapter<RepoListAdapter.RepoListView>() {
 
     lateinit var callback: Callback
     lateinit var context: Context
-    lateinit var reposViewModelList: List<RepoViewModel>
+    var reposViewModelList: MutableList<RepoViewModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoListView {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,6 +30,9 @@ class RepoListAdapter: RecyclerView.Adapter<RepoListAdapter.RepoListView>() {
 
     override fun onBindViewHolder(holder: RepoListView, position: Int) {
         holder.bind(reposViewModelList[position])
+        if (position == itemCount-1) {
+            callback.onScrolledToBottom(reposViewModelList[itemCount -1].repo.id.toInt())
+        }
     }
 
     inner class RepoListView(val repoBinding: RepoBinding): RecyclerView.ViewHolder(repoBinding.root) {
@@ -47,7 +50,8 @@ class RepoListAdapter: RecyclerView.Adapter<RepoListAdapter.RepoListView>() {
     }
 
     interface Callback {
-        fun onItemClicked(context: Context, repo: Repo)
+        fun onItemClicked(context: Context, repo: Repo) {}
+        fun onScrolledToBottom(lastId: Int) {}
     }
 
 }

@@ -15,10 +15,10 @@ class GitHubRepository : BaseRepository() {
     @Inject
     lateinit var api: GitHubApi
 
-    suspend fun getRepos() : List<Repo>? {
+    suspend fun getRepos(since: Int) : List<Repo>? {
 
         val repositoriesResponse = safeApiCall(
-            call = { api.getRepos().await() },
+            call = { api.getRepos(since).await() },
             errorMessage = "Error fetching repositories"
         )
         val repos = repositoriesResponse?.toList()

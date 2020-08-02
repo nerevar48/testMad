@@ -20,7 +20,7 @@ class RepoViewModel : ViewModel() {
     @Inject
     lateinit var repository: GitHubRepository
 
-    private val reposLiveData = MutableLiveData<List<RepoViewModel>>()
+    private val reposLiveData = MutableLiveData<Pair<MutableList<RepoViewModel>, Boolean>>()
     private val reposViewList = mutableListOf<RepoViewModel>()
 
     lateinit var repo: Repo
@@ -30,17 +30,23 @@ class RepoViewModel : ViewModel() {
         return repoLiveData
     }
 
-    fun fetchRepos(): LiveData<List<RepoViewModel>> {
+    fun fetchRepos(since: Int = 0): LiveData<Pair<MutableList<RepoViewModel>, Boolean>> {
         viewModelScope.launch {
-            val repos = repository.getRepos()
-            reposViewList.clear()
-            repos?.forEach {
-                val reposViewModel = App.component.getRepoViewModel()
-                reposViewModel.repo = it
-                reposViewList.add(reposViewModel)
-            }
+            val repos = repository.getRepos(since)
+            if (repos != null) {
 
-            reposLiveData.postValue(reposViewList)
+                if (since == 0) {
+                    reposViewList.clear()
+                }
+
+                repos.forEach {
+                    val reposViewModel = App.component.getRepoViewModel()
+                    reposViewModel.repo = it
+                    reposViewList.add(reposViewModel)
+                }
+
+            }
+            reposLiveData.postValue(Pair(reposViewList, since != 0))
         }
 
         return reposLiveData

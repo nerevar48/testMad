@@ -12,7 +12,7 @@ import ru.test.livanov.model.RepoCommits
 interface GitHubApi {
 
     @GET("repositories")
-    fun getRepos(): Deferred<Response<List<Repo>>>
+    fun getRepos(@Query("since") page: Int): Deferred<Response<List<Repo>>>
 
     @GET("repos/{owner}/{name}")
     fun getRepoDetail(@Path("owner") owner:String, @Path("name") name:String): Deferred<Response<RepoDetail>>
