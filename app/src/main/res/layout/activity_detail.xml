@@ -14,18 +14,6 @@
         android:layout_height="match_parent"
         tools:context=".DetailActivity">
 
-        <TextView
-            android:id="@+id/repoName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@{repoDetailModel.repoDetail.fullName}"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/Widget.AppCompat.ProgressBar"
@@ -35,76 +23,116 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/nestedScroll" />
 
-        <ImageView
-            android:id="@+id/ownerAvatar"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/owner_avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repoLink"
-            tools:src="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/ownerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@{repoDetailModel.repoDetail.owner.login}"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/repoLink" />
-
-        <TextView
-            android:id="@+id/ownerType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@{repoDetailModel.repoDetail.owner.type}"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/ownerName" />
-
-        <TextView
-            android:id="@+id/ownerLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:linksClickable="true"
-            android:autoLink="web"
-            android:text="@{repoDetailModel.repoDetail.owner.url}"
-            app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/ownerType" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/commitsRecycler"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScroll"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:overScrollMode="never"
-            android:scrollbars="none"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ownerAvatar" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
 
-        <TextView
-            android:id="@+id/repoLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:linksClickable="true"
-            android:autoLink="web"
-            android:text="@{repoDetailModel.repoDetail.url}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repoName" />
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/repoName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@{repoDetailModel.repoDetail.fullName}"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ownerType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@{repoDetailModel.repoDetail.owner.type}"
+                        android:textSize="14sp"
+                        android:textStyle="italic"
+                        app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
+                        app:layout_constraintTop_toBottomOf="@+id/ownerName" />
+
+                    <ImageView
+                        android:id="@+id/ownerAvatar"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:contentDescription="@string/owner_avatar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/repoLink"
+                        tools:src="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/ownerLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:autoLink="web"
+                        android:linksClickable="true"
+                        android:text="@{repoDetailModel.repoDetail.owner.url}"
+                        app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
+                        app:layout_constraintTop_toBottomOf="@+id/ownerType" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/commitsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="24dp"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ownerAvatar" />
+
+                    <TextView
+                        android:id="@+id/ownerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@{repoDetailModel.repoDetail.owner.login}"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/ownerAvatar"
+                        app:layout_constraintTop_toTopOf="@+id/ownerAvatar" />
+
+                    <TextView
+                        android:id="@+id/repoLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:autoLink="web"
+                        android:linksClickable="true"
+                        android:text="@{repoDetailModel.repoDetail.url}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/repoName" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
