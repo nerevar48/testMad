@@ -3,26 +3,19 @@ package ru.test.livanov.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import ru.test.livanov.App
 import ru.test.livanov.api.GitHubRepository
 import ru.test.livanov.di.DaggerAppComponent
 import ru.test.livanov.model.RepoCommits
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 class RepoCommitViewModel : ViewModel() {
 
     init {
         DaggerAppComponent.create().injectRepoCommitViewModel(this)
     }
-
-    private val parentJob = Job()
-
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-
-    private val scope = CoroutineScope(coroutineContext)
 
     @Inject
     lateinit var repository: GitHubRepository
@@ -41,7 +34,7 @@ class RepoCommitViewModel : ViewModel() {
 
     fun fetchRepoCommits(count: Int = 10): LiveData<List<RepoCommitViewModel>> {
         if (ownerName != null && name != null) {
-            scope.launch {
+            viewModelScope.launch {
                 val repoCommits = repository.getRepoCommits(ownerName!!, name!!, 1, count)
                 repoCommits?.forEach {
                     val repoCommitViewModel = App.component.getRepoCommitViewModel()
@@ -54,6 +47,6 @@ class RepoCommitViewModel : ViewModel() {
         return reposLiveData
     }
 
-    fun cancelAllRequests() = scope.coroutineContext.cancelChildren()
+    fun cancelAllRequests() = viewModelScope.coroutineContext.cancelChildren()
 
 }

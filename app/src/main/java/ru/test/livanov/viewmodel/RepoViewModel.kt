@@ -3,24 +3,19 @@ package ru.test.livanov.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import ru.test.livanov.App
 import ru.test.livanov.api.GitHubRepository
 import ru.test.livanov.model.Repo
 import ru.test.livanov.di.DaggerAppComponent
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 class RepoViewModel : ViewModel() {
 
     init {
         DaggerAppComponent.create().injectRepoViewModel(this)
     }
-
-    private var parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
-    private var scope = CoroutineScope(coroutineContext)
 
     @Inject
     lateinit var repository: GitHubRepository
@@ -36,7 +31,7 @@ class RepoViewModel : ViewModel() {
     }
 
     fun fetchRepos(): LiveData<List<RepoViewModel>> {
-        scope.launch {
+        viewModelScope.launch {
             val repos = repository.getRepos()
             reposViewList.clear()
             repos?.forEach {
@@ -53,7 +48,7 @@ class RepoViewModel : ViewModel() {
 
     fun fetchRepoDetail() {
         if (this::repo.isInitialized) {
-            scope.launch {
+            viewModelScope.launch {
                 val repoDetail = repository.getRepoDetail(repo.ownerName, repo.name)
                 if (repoDetail != null) {
                     repo.fillFromDetail(repoDetail)
@@ -65,7 +60,7 @@ class RepoViewModel : ViewModel() {
 
     fun fetchRepoCommitsCount() {
         if (this::repo.isInitialized) {
-            scope.launch {
+            viewModelScope.launch {
                 val repoCommitsCount = repository.getRepoCommitsCount(repo.ownerName, repo.name)
                 repo.commitsCount = repoCommitsCount.toString()
                 repoLiveData.postValue(repo)
@@ -73,6 +68,6 @@ class RepoViewModel : ViewModel() {
         }
     }
 
-    fun cancelAllRequests() = scope.coroutineContext.cancelChildren()
+    fun cancelAllRequests() = viewModelScope.coroutineContext.cancelChildren()
 
 }

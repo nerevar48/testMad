@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.test.livanov.viewmodel.RepoViewModel
 import ru.test.livanov.model.Repo
@@ -32,31 +33,27 @@ class MainActivity : AppCompatActivity() {
         repoListAdapter.context = this
 
         val repoViewModel = ViewModelProviders.of(this).get(RepoViewModel::class.java)
-        loadReposList(repoViewModel)
 
-        repoSwipeToRefresh.setOnRefreshListener {
-            repoSwipeToRefresh.isRefreshing = true
-            repoViewModel.cancelAllRequests()
-            loadReposList(repoViewModel)
-        }
-
-    }
-
-    private fun loadReposList(repoViewModel: RepoViewModel) {
         repoViewModel.fetchRepos().observe(this, Observer { repoViewModelList ->
             repoListAdapter.reposViewModelList = repoViewModelList
             setList()
+            if (repoSwipeToRefresh.isRefreshing)
+                repoSwipeToRefresh.isRefreshing = false
 
             repoViewModelList?.forEachIndexed { index, it ->
                 it.getLiveData().observe(this, Observer {
                     repoListAdapter.notifyItemChanged(index)
-                    if (repoSwipeToRefresh.isRefreshing)
-                        repoSwipeToRefresh.isRefreshing = false
                 })
                 it.fetchRepoDetail()
                 it.fetchRepoCommitsCount()
             }
         })
+
+        repoSwipeToRefresh.setOnRefreshListener {
+            repoViewModel.cancelAllRequests()
+            repoViewModel.fetchRepos()
+        }
+
     }
 
     private fun setList() {
