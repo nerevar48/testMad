@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routes"
+    app:startDestination="@id/mainListFragment">
+
+    <fragment
+        android:id="@+id/mainListFragment"
+        android:name="ru.test.livanov.fragment.MainListFragment"
+        android:label="fragment_main_list"
+        tools:layout="@layout/fragment_main_list" >
+        <action
+            android:id="@+id/action_mainListFragment_to_secondListFragment"
+            app:destination="@id/secondListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondListFragment"
+        android:name="ru.test.livanov.fragment.SecondListFragment"
+        android:label="fragment_second_list"
+        tools:layout="@layout/fragment_main_list" />
+</navigation>

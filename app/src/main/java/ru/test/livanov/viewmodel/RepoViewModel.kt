@@ -30,6 +30,10 @@ class RepoViewModel : ViewModel() {
         return repoLiveData
     }
 
+    fun getListLiveData(): LiveData<Pair<MutableList<RepoViewModel>, Boolean>> {
+        return reposLiveData
+    }
+
     fun fetchRepos(since: Int = 0): LiveData<Pair<MutableList<RepoViewModel>, Boolean>> {
         viewModelScope.launch {
             val repos = repository.getRepos(since)
@@ -47,6 +51,24 @@ class RepoViewModel : ViewModel() {
 
             }
             reposLiveData.postValue(Pair(reposViewList, since != 0))
+        }
+
+        return reposLiveData
+    }
+
+    fun fetchUserRepos(owner: String): LiveData<Pair<MutableList<RepoViewModel>, Boolean>> {
+        viewModelScope.launch {
+            val repos = repository.getUserRepos(owner)
+            if (repos != null) {
+
+                repos.forEach {
+                    val reposViewModel = App.component.getRepoViewModel()
+                    reposViewModel.repo = it
+                    reposViewList.add(reposViewModel)
+                }
+
+            }
+            reposLiveData.postValue(Pair(reposViewList, false))
         }
 
         return reposLiveData

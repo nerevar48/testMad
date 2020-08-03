@@ -29,6 +29,20 @@ class GitHubRepository : BaseRepository() {
         return repos
     }
 
+    suspend fun getUserRepos(owner: String) : List<Repo>? {
+
+        val repositoriesResponse = safeApiCall(
+            call = { api.getUserRepos(owner).await() },
+            errorMessage = "Error fetching repositories"
+        )
+        val repos = repositoriesResponse?.toList()
+        repos?.map {
+            it.ownerName = it.owner.login
+        }
+
+        return repos
+    }
+
     suspend fun getRepoDetail(owner: String, name: String): RepoDetail? {
         return safeApiCall(
             call = { api.getRepoDetail(owner, name).await() },

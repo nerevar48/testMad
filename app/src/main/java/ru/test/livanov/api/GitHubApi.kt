@@ -14,6 +14,9 @@ interface GitHubApi {
     @GET("repositories")
     fun getRepos(@Query("since") page: Int): Deferred<Response<List<Repo>>>
 
+    @GET("users/{owner}/repos")
+    fun getUserRepos(@Path("owner") owner:String): Deferred<Response<List<Repo>>>
+
     @GET("repos/{owner}/{name}")
     fun getRepoDetail(@Path("owner") owner:String, @Path("name") name:String): Deferred<Response<RepoDetail>>
 

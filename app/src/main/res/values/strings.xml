@@ -9,4 +9,6 @@
     <string name="repo_commits_label">Commits:</string>
     <string name="repo_detail_owner_label">owner:</string>
     <string name="owner_avatar">owner avatar</string>
+    <string name="main_list">Main list</string>
+    <string name="second_list">Second list</string>
 </resources>

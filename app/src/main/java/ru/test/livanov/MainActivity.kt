@@ -1,18 +1,12 @@
 package ru.test.livanov
 
-import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.test.livanov.viewmodel.RepoViewModel
-import ru.test.livanov.model.Repo
-import ru.test.livanov.ui.RepoListAdapter
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,70 +15,36 @@ class MainActivity : AppCompatActivity() {
         const val KEY_REPO_NAME_TO_DETAIL = "repo_name_to_detail"
     }
 
-    @Inject
-    lateinit var repoListAdapter: RepoListAdapter
-    lateinit var repoViewModel: RepoViewModel
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         App.component.injectsMainActivity(this)
 
-        repoListAdapter.context = this
+        navController = Navigation.findNavController(this, R.id.navFragment)
 
-        repoViewModel = ViewModelProviders.of(this).get(RepoViewModel::class.java)
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setPopUpTo(navController.graph.startDestination, false)
+            .build()
 
-        fetchList()
-
-    }
-
-    private fun fetchList() {
-        repoViewModel.fetchRepos().observe(this, Observer { result ->
-            val repoViewModelList = result.first
-            if (!result.second) {
-                setList()
-                if (repoSwipeToRefresh.isRefreshing)
-                    repoSwipeToRefresh.isRefreshing = false
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab?.position) {
+                    0 -> navController.navigate(R.id.mainListFragment, null, navOptions)
+                    1 -> navController.navigate(R.id.secondListFragment, null, navOptions)
+                }
             }
 
-            repoViewModelList.forEachIndexed { index, it ->
-                repoListAdapter.reposViewModelList.add(it)
-                repoListAdapter.notifyItemInserted(repoListAdapter.itemCount-1)
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
 
-                it.getLiveData().observe(this, Observer {
-                    repoListAdapter.notifyItemChanged(index)
-                })
-                it.fetchRepoDetail()
-                it.fetchRepoCommitsCount()
+            }
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
             }
         })
-
-        repoSwipeToRefresh.setOnRefreshListener {
-            repoViewModel.cancelAllRequests()
-            repoViewModel.fetchRepos()
-        }
     }
 
-
-    private fun setList() {
-        reposRecycler.adapter = repoListAdapter
-        repoListAdapter.callback = object : RepoListAdapter.Callback {
-            override fun onItemClicked(context: Context, repo: Repo) {
-                super.onItemClicked(context, repo)
-                val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra(KEY_REPO_OWNER_TO_DETAIL, repo.ownerName)
-                intent.putExtra(KEY_REPO_NAME_TO_DETAIL, repo.name)
-                context.startActivity(intent)
-            }
-
-            override fun onScrolledToBottom(lastId: Int) {
-                super.onScrolledToBottom(lastId)
-                repoViewModel.fetchRepos(lastId)
-            }
-
-        }
-        reposRecycler.layoutManager = LinearLayoutManager(this)
-        reposRecycler.addItemDecoration(DividerItemDecoration(reposRecycler.context, DividerItemDecoration.VERTICAL))
-    }
 
 }
