@@ -1,15 +1,11 @@
 package ru.test.livanov.api
 
-import android.util.Base64
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.test.livanov.util.GITHUB_API_BASE_URL
-import ru.test.livanov.util.GITHUB_LOGIN
-import ru.test.livanov.util.GITHUB_TOKEN
-import java.nio.charset.Charset
 
 object ApiFactory {
 
@@ -18,16 +14,9 @@ object ApiFactory {
             .newBuilder()
             .build()
 
-        /**
-         * в итоге это тут для красоты
-         */
-        val credentials = "$GITHUB_LOGIN:$GITHUB_TOKEN"
-        val basic = "Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
-
         val newRequest = chain.request()
             .newBuilder()
             .url(newUrl)
-            .addHeader("Authorization", basic)
             .build()
 
         chain.proceed(newRequest)

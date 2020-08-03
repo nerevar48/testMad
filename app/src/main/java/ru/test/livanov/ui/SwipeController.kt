@@ -151,7 +151,7 @@ class SwipeController : Callback() {
         isCurrentlyActive: Boolean
     ) {
 
-        recyclerView.setOnTouchListener { view, motionEvent ->
+        recyclerView.setOnTouchListener { _, motionEvent ->
             swipeBack = motionEvent.action == MotionEvent.ACTION_CANCEL || motionEvent.action == MotionEvent.ACTION_UP
             if (swipeBack) {
                 if (dX < -buttonWidth) buttonShowedState = ButtonsState.RIGHT_VISIBLE
@@ -177,7 +177,7 @@ class SwipeController : Callback() {
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        recyclerView.setOnTouchListener { view, motionEvent ->
+        recyclerView.setOnTouchListener { _, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 setTouchUpListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
@@ -195,10 +195,10 @@ class SwipeController : Callback() {
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        recyclerView.setOnTouchListener { view, motionEvent ->
+        recyclerView.setOnTouchListener { _, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_UP) {
                 super@SwipeController.onChildDraw(c, recyclerView, viewHolder, 0f, dY, actionState, isCurrentlyActive)
-                recyclerView.setOnTouchListener { view, motionEvent ->
+                recyclerView.setOnTouchListener { _, _ ->
                     false
                 }
                 setItemsClickable(recyclerView, true)
