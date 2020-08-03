@@ -8,13 +8,14 @@
     <data class="RepoBinding">
         <variable
             name="repoModel"
-            type="ru.test.livanov.viewmodel.RepoViewModel" />
+            type="ru.test.livanov.viewmodel.AbstractRepoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/repoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#FFFFFF"
         android:paddingTop="8dp"
         android:paddingBottom="16dp">
 

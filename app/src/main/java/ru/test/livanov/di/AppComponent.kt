@@ -9,6 +9,7 @@ import ru.test.livanov.api.GitHubRepository
 import ru.test.livanov.viewmodel.RepoViewModel
 import ru.test.livanov.di.module.AppModule
 import ru.test.livanov.viewmodel.RepoCommitViewModel
+import ru.test.livanov.viewmodel.RepoDbViewModel
 import ru.test.livanov.viewmodel.RepoDetailViewModel
 import javax.inject.Singleton
 
@@ -16,13 +17,15 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
     fun getRepoViewModel(): RepoViewModel
+    fun getRepoDbViewModel(): RepoDbViewModel
     fun getRepoCommitViewModel(): RepoCommitViewModel
-    fun injectsMainActivity(mainActivity: MainActivity)
+    fun injectsMainActivity(activity: MainActivity)
     fun injectsMainFragment(fragment: MainListFragment)
     fun injectsSecondFragment(fragment: SecondListFragment)
-    fun injectsDetailActivity(mainActivity: DetailActivity)
+    fun injectsDetailActivity(activity: DetailActivity)
     fun injectGitHubRepository(injectTarget: GitHubRepository)
     fun injectRepoViewModel(injectTarget: RepoViewModel)
+    fun injectRepoDbViewModel(injectTarget: RepoDbViewModel)
     fun injectRepoDetailViewModel(injectTarget: RepoDetailViewModel)
     fun injectRepoCommitViewModel(injectTarget: RepoCommitViewModel)
 }

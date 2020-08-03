@@ -12,22 +12,25 @@ import ru.test.livanov.DetailActivity
 import ru.test.livanov.MainActivity
 import ru.test.livanov.model.Repo
 import ru.test.livanov.ui.RepoListAdapter
-import ru.test.livanov.viewmodel.RepoViewModel
+import ru.test.livanov.viewmodel.AbstractRepoViewModel
 
 abstract class AbstractListFragment : Fragment() {
 
     open lateinit var repoListAdapter: RepoListAdapter
-    lateinit var repoViewModel: RepoViewModel
+    lateinit var repoViewModel: AbstractRepoViewModel
     lateinit var repoSwipeToRefresh: SwipeRefreshLayout
     lateinit var reposRecycler: RecyclerView
 
     abstract fun fetchData()
+
+    open fun getAdditionalData(viewModel: AbstractRepoViewModel, index: Int) { }
 
     fun initObserve() {
         repoViewModel.getListLiveData().observe(this, Observer { result ->
             val repoViewModelList = result.first
             if (!result.second) {
                 setList()
+                repoListAdapter.reposViewModelList.clear()
                 if (repoSwipeToRefresh.isRefreshing)
                     repoSwipeToRefresh.isRefreshing = false
             }
@@ -35,22 +38,18 @@ abstract class AbstractListFragment : Fragment() {
             repoViewModelList.forEachIndexed { index, it ->
                 repoListAdapter.reposViewModelList.add(it)
                 repoListAdapter.notifyItemInserted(repoListAdapter.itemCount-1)
-
-                it.getLiveData().observe(this, Observer {
-                    repoListAdapter.notifyItemChanged(index)
-                })
-                it.fetchRepoDetail()
-                it.fetchRepoCommitsCount()
+                getAdditionalData(it, index)
             }
         })
 
         repoSwipeToRefresh.setOnRefreshListener {
             repoViewModel.cancelAllRequests()
+
             fetchData()
         }
     }
 
-    abstract fun onScrollUpdate(lastId: Int)
+    open fun onScrollUpdate(lastId: Int) { }
 
     private fun setList() {
         reposRecycler.adapter = repoListAdapter

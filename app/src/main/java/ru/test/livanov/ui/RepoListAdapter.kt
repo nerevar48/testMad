@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.test.livanov.R
 import ru.test.livanov.databinding.RepoBinding
 import ru.test.livanov.model.Repo
-import ru.test.livanov.viewmodel.RepoViewModel
+import ru.test.livanov.viewmodel.AbstractRepoViewModel
 
 class RepoListAdapter: RecyclerView.Adapter<RepoListAdapter.RepoListView>() {
 
     lateinit var callback: Callback
     lateinit var context: Context
-    var reposViewModelList: MutableList<RepoViewModel> = mutableListOf()
+    var reposViewModelList: MutableList<AbstractRepoViewModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoListView {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -30,14 +30,17 @@ class RepoListAdapter: RecyclerView.Adapter<RepoListAdapter.RepoListView>() {
 
     override fun onBindViewHolder(holder: RepoListView, position: Int) {
         holder.bind(reposViewModelList[position])
+        /**
+         * выбран как самый простой вариант, в идеале конечно нужно грузить заранее что бы разрыв был минимульным для пользователя
+         */
         if (position == itemCount-1) {
-            callback.onScrolledToBottom(reposViewModelList[itemCount -1].repo.id.toInt())
+            callback.onScrolledToBottom(reposViewModelList[itemCount -1].repo.id)
         }
     }
 
     inner class RepoListView(val repoBinding: RepoBinding): RecyclerView.ViewHolder(repoBinding.root) {
 
-        fun bind(repoViewModel: RepoViewModel) {
+        fun bind(repoViewModel: AbstractRepoViewModel) {
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
                     callback.onItemClicked(itemView.context, reposViewModelList[adapterPosition].repo)

@@ -17,6 +17,10 @@ object ApiFactory {
         val newUrl = chain.request().url()
             .newBuilder()
             .build()
+
+        /**
+         * в итоге это тут для красоты
+         */
         val credentials = "$GITHUB_LOGIN:$GITHUB_TOKEN"
         val basic = "Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
 
